@@ -466,6 +466,13 @@ extension OrderedSet {
 }
 
 extension OrderedSet {
+  /// - Complexity: O(`count`). Removing an element from the middle of the
+  ///    underlying ordered set needs to rearrange the remaining elements to
+  ///    close the resulting gap.
+  ///
+  ///    Removing the last element only takes (amortized) O(1)
+  ///    hashing/comparisons operations, if `Element` implements high quality
+  ///    hashing.
   @inlinable
   @discardableResult
   internal mutating func _removeExistingMember(

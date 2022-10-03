@@ -505,6 +505,14 @@ class OrderedSetTests: CollectionTestCase {
     }
   }
 
+  func test_replaceAndAppend_existing() {
+    // TODO:
+  }
+  
+  func test_replaceAndAppend_new() {
+    // TODO:
+  }
+  
   func test_swapAt() {
     withOrderedSetLayouts(scales: [0, 5, 6]) { layout in
       withEvery("isShared", in: [false, true]) { isShared in

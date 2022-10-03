@@ -253,3 +253,63 @@ extension OrderedSet {
     return (nil, index)
   }
 }
+
+extension OrderedSet {
+  /// Remove an existing value, if present, and append the new value to the end of the set.
+  ///
+  /// - Parameter item: The new value to append.
+  ///
+  /// - Returns: The original value which was replaced by this operation, or `nil` if one was not present.
+  ///
+  /// - Complexity: O(`count`)
+  @inlinable
+  @discardableResult
+  internal mutating func _appendExisting(
+    _ item: Element
+  ) -> Element? {
+    let (existingIndex, bucket) = _find(item)
+    var existing: Element?
+    
+    if let existingIndex = existingIndex {
+      existing = _elements[existingIndex]
+      _removeExistingMember(at: existingIndex, in: bucket)
+    }
+    _appendNew(item, in: bucket)
+    return existing
+  }
+}
+
+extension OrderedSet {
+  /// Replaces an existing value, if present, of the given element and appends the new value to the set.
+  ///
+  /// - Parameter item: The new value to append.
+  ///
+  /// - Returns: The original value which was replaced by this operation, or `nil` if one was not present.
+  ///
+  /// - Complexity: O(`count`)
+  @inlinable
+  @discardableResult
+  public mutating func replaceAndAppend(
+    _ item: Element
+  ) -> Element? {
+    let result = _appendExisting(item)
+    _checkInvariants()
+    return result
+  }
+  
+  /// Replaces a sequence of existing values, if present, of the given sequence and appends the new values to the set.
+  ///
+  /// - Parameter contentsOf: The sequence of new values to append.
+  ///
+  /// - Complexity: O(`elements.count * self.count`)
+  @inlinable
+  public mutating func replaceAndAppend<S>(
+    contentsOf elements: S
+  )
+  where S : Sequence, S.Element == Element {
+    for item in elements {
+      _appendExisting(item)
+    }
+    _checkInvariants()
+  }
+}
